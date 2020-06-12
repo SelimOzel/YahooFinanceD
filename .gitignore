@@ -13,3 +13,4 @@ fincrawler-test-*
 *.o
 *.obj
 *.lst
+*.json
