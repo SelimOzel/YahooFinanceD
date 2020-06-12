@@ -52,7 +52,7 @@ public:
 		try
 		{
 			// Curl it
-		    string content = to!string(get(dataQuery));
+			string content = to!string(get(dataQuery));
 
 			// Get the raw string between root.App.main and (this)
 			string output = CutString(content, "root.App.main = ", "(this));");
@@ -66,14 +66,14 @@ public:
 			}
 			catch (JSONException e)
 			{
-		    	writeln(e.msg); 
-		    	_miningDone = false;				
+		    		writeln(e.msg); 
+		    		_miningDone = false;				
 			}
 		}
 		catch (CurlException e)
 		{
-		    writeln(e.msg); 
-		    _miningDone = false;
+			writeln(e.msg); 
+			_miningDone = false;
 		}		
 	}
 
