@@ -1,0 +1,5 @@
+name "yahoominerd"
+description "Yahoo finance scraper written in D."
+authors "Selim Ozel"
+copyright "Copyright © 2020, Selim Ozel"
+license "MIT"

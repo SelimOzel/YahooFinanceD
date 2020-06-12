@@ -1,0 +1,15 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/fincrawler
+fincrawler.so
+fincrawler.dylib
+fincrawler.dll
+fincrawler.a
+fincrawler.lib
+fincrawler-test-*
+*.exe
+*.o
+*.obj
+*.lst
