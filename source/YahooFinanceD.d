@@ -1,4 +1,3 @@
-import std.stdio;
 import std.net.curl;
 import std.datetime;
 import std.file;
@@ -35,6 +34,8 @@ public:
 	void WriteLogger(output val)()
 		if(val == output.json)
 	{
+		import std.stdio: writeln;
+
 		if(_miningDone) 
 		{
 			writeln("Price output written to " ~ _name~"_"~_beginDate_s~"_"~_endDate_s~"_prices.json. ");
@@ -106,6 +107,8 @@ public:
 	// Mine logger
 	void MineLogger()
 	{
+		import std.stdio: writeln;
+		
 		writeln("Retrieveing "~_name~" between "~_beginUnix_s~" and "~_endUnix_s~".");
 		writeln("Using query: "~_query);
 
