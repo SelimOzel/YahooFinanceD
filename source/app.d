@@ -14,5 +14,5 @@ void main()
 
 	YahooFinanceD simpleMiner;
 	simpleMiner.Mine(begin, end, name);
-	simpleMiner.WriteToJson();
+	simpleMiner.Write;
 }
