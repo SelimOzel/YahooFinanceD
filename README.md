@@ -1,4 +1,4 @@
-# YahooMinerD
+# YahooFinanceD
 Yahoo finance scraper written in D.
 
 | Development Environment 	| DMD	| DUB
