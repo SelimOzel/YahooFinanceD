@@ -8,6 +8,35 @@ import std.json;
 enum output {json} // Output templates can be added in the future
 enum logger {on, off} // Enable/disable logging
 
+struct Split
+{
+	int denominator;
+	int numerator;
+}
+
+struct Dividend
+{
+	double amount;
+}
+
+struct Price
+{
+	double adjclose;
+	double close;
+	double high;
+	double low;
+	double open;
+	uint volume;
+}	
+
+struct Frame
+{
+	Price price;
+	Dividend div;
+	Split split;
+	Date date;
+}
+
 // Yahoo finance data scraper written in Dlang. Selim Ozel
 struct YahooFinanceD
 {
@@ -108,7 +137,7 @@ public:
 	void MineLogger()
 	{
 		import std.stdio: writeln;
-		
+
 		writeln("Retrieveing "~_name~" between "~_beginUnix_s~" and "~_endUnix_s~".");
 		writeln("Using query: "~_query);
 
@@ -159,7 +188,7 @@ private:
 	const int MAXEXCEPTIONS = 100; // maximum allowed number of exceptions
 	string[MAXEXCEPTIONS] _exceptions; // exception container.
 	int _exceptionIndex = 0; // current exception index.
-	int _lastExceptionIndex = 0;
+	int _lastExceptionIndex = 0; // to print exceptions
 }
 
 unittest
