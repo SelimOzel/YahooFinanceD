@@ -3,7 +3,7 @@ import std.datetime;
 import std.string;
 
 // Miner class
-import YahooMinerD;
+import YahooFinanceD;
 
 void main()
 {
@@ -12,7 +12,7 @@ void main()
 	Date begin = Date(1980, 12, 12);
 	Date end = Date(2020, 6, 10);
 
-	YahooMinerD simpleMiner = new YahooMinerD();
+	YahooFinanceD simpleMiner = new YahooFinanceD();
 	simpleMiner.Mine(begin, end, name);
 	simpleMiner.WriteToJson();
 }
