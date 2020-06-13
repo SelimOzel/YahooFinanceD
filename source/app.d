@@ -12,7 +12,7 @@ void main()
 	Date begin = Date(1980, 12, 12);
 	Date end = Date(2020, 6, 10);
 
-	YahooFinanceD simpleMiner = new YahooFinanceD();
+	YahooFinanceD simpleMiner;
 	simpleMiner.Mine(begin, end, name);
 	simpleMiner.WriteToJson();
 }

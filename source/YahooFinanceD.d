@@ -7,7 +7,7 @@ import std.algorithm;
 import std.json;
 
 // Yahoo finance data scraper written in Dlang. Selim Ozel
-class YahooFinanceD
+struct YahooFinanceD
 {
 public:
 	// Write output to json
@@ -125,7 +125,7 @@ unittest
 	Date end = Date(2020, 6, 10);
 
 	// Create the miner object
-	YahooFinanceD simpleMiner = new YahooFinanceD();
+	YahooFinanceD simpleMiner;
 
 	// Mine each item in the list and save them as json
 	foreach(string name; list)
