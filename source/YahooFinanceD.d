@@ -5,29 +5,9 @@ import std.conv;
 import std.algorithm;
 import std.json;
 
-enum output {json} // Output templates can be added in the future
+enum output {json, frame} // Feel free to add your own templates here
 enum logger {on, off} // Enable/disable logging
-
-struct Split
-{
-	int denominator;
-	int numerator;
-}
-
-struct Dividend
-{
-	double amount;
-}
-
-struct Price
-{
-	double adjclose;
-	double close;
-	double high;
-	double low;
-	double open;
-	uint volume;
-}	
+enum intervals {daily = "1d", weekly = "1wk", monthly = "1mo"}
 
 struct Frame
 {
@@ -37,29 +17,56 @@ struct Frame
 	Date date;
 }
 
+struct Price
+{
+	double adjclose;
+	double close;
+	double high;
+	double low;
+	double open;
+	long volume;
+}
+
+struct Dividend
+{
+	double amount;
+}	
+
+struct Split
+{
+	long denominator;
+	long numerator;
+}
+
 // Yahoo finance data scraper written in Dlang. Selim Ozel
 struct YahooFinanceD
 {
 public:
 	// Write template
-	void Write(output val = output.json, logger log = logger.on)()
+	T Write(output val = output.json, logger log = logger.on, T = bool)(string option = "")
 	{
-		WriteImpl!val;
+		T result = WriteImpl!val(option);
 		if(log == logger.on) WriteLogger!val;
+		return result;
 	}
 
-	// Write implementation
-	void WriteImpl(output val)()
+	// Write implementation - json
+	bool WriteImpl(output val, T = bool)(string option = "")
 		if(val == output.json)
 	{
 		if(_miningDone) 
 		{
-			std.file.write(_name~"_"~_beginDate_s~"_"~_endDate_s~"_prices.json", _j["prices"].toPrettyString);
-			std.file.write(_name~"_"~_beginDate_s~"_"~_endDate_s~"_events.json", _j["eventsData"].toPrettyString);
+			if(option == "prices" || option == "") std.file.write(_name~"_"~_beginDate_s~"_"~_endDate_s~"_prices.json", _j["prices"].toPrettyString);
+			if(option == "eventsData" || option == "") std.file.write(_name~"_"~_beginDate_s~"_"~_endDate_s~"_events.json", _j["eventsData"].toPrettyString);
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 
-	// Write logger
+	// Write logger - json
 	void WriteLogger(output val)()
 		if(val == output.json)
 	{
@@ -76,15 +83,154 @@ public:
 		}
 	}
 
-	// Mine template
-	void Mine(logger log = logger.on)(Date begin, Date end, string name)
+	// Write implementation - frame
+	Frame[] WriteImpl(output val, T = Frame[])(string option = "")
+		if(val == output.frame)
 	{
-		MineImpl(begin, end, name);
+		Frame[] result;
+		if(_miningDone) 
+		{
+			Split s;
+			Dividend d;
+
+			for (int i = _j["prices"].array.length-1; i>=0; i--)
+			{
+				Frame frame;
+				string date = to!string(_j["prices"][i]["date"]);
+				frame.date = cast(Date)SysTime(unixTimeToStdTime(to!long(date)));
+
+				if("type" in _j["prices"][i])
+				{
+					string type = to!string(_j["prices"][i]["type"]);
+					if(type == "\"SPLIT\"") 
+					{
+						s.denominator = _j["prices"][i]["denominator"].integer;
+						s.numerator = _j["prices"][i]["numerator"].integer;
+						_splitsWritten++;
+					}
+					if(type == "\"DIVIDEND\"") 
+					{	
+						d.amount = to!double(_j["prices"][i]["amount"].floating);
+						_divsWritten++;
+					}					
+				}
+				else
+				{
+					// Make sure to save div/split with the correct price/date data. 
+					frame.div = d;
+					frame.split = s;
+
+					d.amount = 0;
+					s.denominator = 0;
+					s.numerator = 0;
+
+					Price price;
+
+					// adjclose
+					if(_j["prices"][i]["adjclose"].type() == JSONType.integer)
+					{
+						price.adjclose = to!double(_j["prices"][i]["adjclose"].integer);
+					}
+					else if(_j["prices"][i]["adjclose"].type() == JSONType.float_)
+					{
+						price.adjclose = _j["prices"][i]["adjclose"].floating;
+					}	
+					else if(_j["prices"][i]["adjclose"].type() == JSONType.null_)
+					{
+						continue;
+					}		
+
+					// close
+					if(_j["prices"][i]["close"].type() == JSONType.integer)
+					{
+						price.close = to!double(_j["prices"][i]["close"].integer);
+					}
+					else if(_j["prices"][i]["close"].type() == JSONType.float_)
+					{
+						price.close = _j["prices"][i]["close"].floating;
+					}	
+					else if(_j["prices"][i]["close"].type() == JSONType.null_)
+					{
+						continue;
+					}	
+
+					// high
+					if(_j["prices"][i]["high"].type() == JSONType.integer)
+					{
+						price.high = to!double(_j["prices"][i]["high"].integer);
+					}
+					else if(_j["prices"][i]["high"].type() == JSONType.float_)
+					{
+						price.high = _j["prices"][i]["high"].floating;
+					}	
+					else if(_j["prices"][i]["high"].type() == JSONType.null_)
+					{
+						continue;
+					}	
+
+					// low
+					if(_j["prices"][i]["low"].type() == JSONType.integer)
+					{
+						price.low = to!double(_j["prices"][i]["low"].integer);
+					}
+					else if(_j["prices"][i]["low"].type() == JSONType.float_)
+					{
+						price.low = _j["prices"][i]["low"].floating;
+					}	
+					else if(_j["prices"][i]["low"].type() == JSONType.null_)
+					{
+						continue;
+					}
+
+					// open
+					if(_j["prices"][i]["open"].type() == JSONType.integer)
+					{
+						price.open = to!double(_j["prices"][i]["open"].integer);
+					}
+					else if(_j["prices"][i]["open"].type() == JSONType.float_)
+					{
+						price.open = _j["prices"][i]["open"].floating;
+					}	
+					else if(_j["prices"][i]["open"].type() == JSONType.null_)
+					{
+						continue;
+					}
+
+					// volume
+					if(_j["prices"][i]["open"].type() != JSONType.null_)
+					{
+						price.volume = _j["prices"][i]["volume"].integer;
+					}
+					frame.price = price;
+					_pricesWritten++;
+					result ~= frame;
+				}
+			}
+		}
+		return result;
+	}
+
+	// Write implementation - frame
+	void WriteLogger(output val)()
+		if(val == output.frame)
+	{
+		import std.stdio: writeln;
+
+		if(_miningDone) 
+		{		
+			writeln("Frame generated for "~_name~" with "~to!string(_divsWritten)~ " dividends, " ~to!string(_splitsWritten)~ " splits and "~to!string(_pricesWritten)~ " prices.");
+		}
+	}	
+
+	// Mine template
+	void Mine(logger log = logger.on)(Date begin, Date end, string name, intervals interval=intervals.daily)
+	{
+		MineImpl(begin, end, name, interval);
 		if(log == logger.on) MineLogger();
 	}
 
 	// Mine implementation
-	void MineImpl(Date begin, Date end, string name)
+	void MineImpl(Date begin, Date end, string name, intervals interval)
 	{
 		// Copy begin/end dates and stock name to private
 		_beginDate = begin;
@@ -99,8 +245,13 @@ public:
 		_beginUnix_s = to!string( SysTime(_beginDate, est).toUnixTime() );
 		_endUnix_s = to!string( SysTime(_endDate, est).toUnixTime() );
 
+		// Reset counters
+		_divsWritten = 0; 
+		_splitsWritten = 0;
+		_pricesWritten = 0; 
+
 		// Assemble query. Use unix time.
-		_query = "https://finance.yahoo.com/quote/"~name~"/history?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval=1d&filter=history&frequency=1d";
+		_query = "https://finance.yahoo.com/quote/"~name~"/history?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&filter=history&frequency="~interval;
 
 		// Curl it
 		string content;
@@ -189,6 +340,10 @@ private:
 	string[MAXEXCEPTIONS] _exceptions; // exception container.
 	int _exceptionIndex = 0; // current exception index.
 	int _lastExceptionIndex = 0; // to print exceptions
+
+	int _divsWritten; // number of data frame divs
+	int _splitsWritten; // number of data frame splits
+	int _pricesWritten; // number of data frame prices
 }
 
 unittest
@@ -197,7 +352,7 @@ unittest
 	// That's a reasonable expectation the sotcks listed below.
 
 	// A small list of five stocks
-	string[5] list = ["AAPL", "MSFT", "TSLA", "F", "BRK-B"];
+	string[6] list = ["AAPL", "MSFT", "TSLA", "F", "BRK-B", "TQQQ"];
 	Date begin = Date(1980, 12, 12);
 	Date end = Date(2020, 6, 10);
 
@@ -207,8 +362,10 @@ unittest
 	// Mine each item in the list and save them as json
 	foreach(string name; list)
 	{
-		simpleMiner.Mine!(logger.off)(begin, end, name);
+		simpleMiner.Mine!(logger.on)(begin, end, name);
 		simpleMiner.Write!(output.json, logger.on);	
-		assert(simpleMiner.PriceLength() > 100);	
+		assert(simpleMiner.PriceLength() > 100);
+		Frame[] frame = simpleMiner.Write!(output.frame, logger.on, Frame[]); 
+		assert(frame.length > 100);
 	}
 }
