@@ -15,7 +15,7 @@ void main()
 
 	YahooFinanceD simpleMiner;
 	simpleMiner.Mine(begin, end, name, intervals.monthly); // scrape monthly
-	Frame[] apple = simpleMiner.Write!(output.frame, logger.off, Frame[]); // write to data frame with logging
+	Frame[] apple = simpleMiner.Write!(output.frame, logger.off, Frame[]); // write to data frame without logging
 
 	for(int i = 0; i<apple.length; i++)
 	{
