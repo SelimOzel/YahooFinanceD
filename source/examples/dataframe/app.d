@@ -9,14 +9,11 @@ import YahooFinanceD;
 void main()
 {
 	// Example: Mining Apple between December 12, 1980 and Jun 6, 2020
-	string name = "AAPL";
+	string name = "MSFT";
 	Date begin = Date(1980, 12, 12);
 	Date end = Date(2020, 6, 10);
 
 	YahooFinanceD simpleMiner;
-	simpleMiner.Mine(begin, end, name); // by default, grabs daily data
-	simpleMiner.Write("prices"); // by default writes to json
-
 	simpleMiner.Mine(begin, end, name, intervals.monthly); // scrape monthly
 	Frame[] apple = simpleMiner.Write!(output.frame, logger.off, Frame[]); // write to data frame with logging
 
@@ -47,5 +44,4 @@ void main()
 			" split-numerator: "~to!string(apple[i].split.numerator));
 		}
 	}
-
 }

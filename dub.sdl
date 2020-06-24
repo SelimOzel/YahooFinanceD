@@ -3,3 +3,29 @@ description "Yahoo finance scraper written in D."
 authors "Selim Ozel"
 copyright "Copyright © 2020, Selim Ozel"
 license "MIT"
+
+targetType "none"
+
+subPackage {
+	name "unittest" 
+	sourcePaths "source/tests" "lib"
+	importPaths "lib"
+	targetName "unittest"
+	targetType "executable"
+}
+
+subPackage {
+	name "example-json" 
+	sourcePaths "source/examples/json" "lib"
+	importPaths "lib"
+	targetName "example-json"
+	targetType "executable"
+}
+
+subPackage {
+	name "example-dataframe" 
+	sourcePaths "source/examples/dataframe" "lib"
+	importPaths "lib"
+	targetName "example-dataframe"
+	targetType "executable"
+}
