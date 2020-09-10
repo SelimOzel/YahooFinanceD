@@ -18,8 +18,8 @@ void main()
 	Date end = Date(2020, 9, 9);
 
 	YahooFinanceD simpleMiner;
-	simpleMiner.Mine(begin, end, name, intervals.daily); // scrape monthly
-	Frame[] TIP = simpleMiner.Write!(output.frame, logger.off, Frame[]); // write to data frame with logging
+	simpleMiner.Mine(begin, end, name, intervals.daily); 
+	Frame[] TIP = simpleMiner.Write!(output.frame, logger.off, Frame[]); 
 
 	double sum = 0;
 	double mean = 0;
