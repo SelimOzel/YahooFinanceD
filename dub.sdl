@@ -15,6 +15,14 @@ subPackage {
 }
 
 subPackage {
+	name "example-dataframe" 
+	sourcePaths "source/examples/dataframe" "lib"
+	importPaths "lib"
+	targetName "example-dataframe"
+	targetType "executable"
+}
+
+subPackage {
 	name "example-json" 
 	sourcePaths "source/examples/json" "lib"
 	importPaths "lib"
@@ -23,9 +31,10 @@ subPackage {
 }
 
 subPackage {
-	name "example-dataframe" 
-	sourcePaths "source/examples/dataframe" "lib"
+	name "example-tip_std" 
+	sourcePaths "source/examples/tip_std" "lib"
 	importPaths "lib"
-	targetName "example-dataframe"
+	targetName "tip_std"
 	targetType "executable"
 }
+
