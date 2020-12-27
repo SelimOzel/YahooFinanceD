@@ -5,7 +5,7 @@ import std.conv;
 import std.algorithm;
 import std.json;
 
-enum output {json, frame} // Feel free to add your own templates here
+enum output {json, frame, csv} // Feel free to add your own templates here
 enum logger {on, off} // Enable/disable logging
 enum intervals {daily = "1d", weekly = "1wk", monthly = "1mo"}
 
@@ -208,7 +208,7 @@ public:
 			}
 		}
 		return result;
-	}
+	}	
 
 	// Write implementation - frame
 	void WriteLogger(output val)()
@@ -221,6 +221,21 @@ public:
 			writeln("Frame generated for "~_name~" with "~to!string(_divsWritten)~ " dividends, " ~to!string(_splitsWritten)~ " splits and "~to!string(_pricesWritten)~ " prices.");
 		}
 	}	
+
+	// Write implementation - csv
+	string WriteImpl(output val, T = string)(string option = "")
+		if(val == output.csv)
+	{	
+		return "";
+	}
+
+	// Write implementation - csv
+	void WriteLogger(output val)()
+		if(val == output.csv)
+	{
+		import std.stdio: writeln;
+		writeln("CSV writer executed.");
+	}		
 
 	// Mine template
 	void Mine(logger log = logger.on)(Date begin, Date end, string name, intervals interval=intervals.daily)
