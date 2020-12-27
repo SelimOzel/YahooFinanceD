@@ -223,10 +223,39 @@ public:
 	}	
 
 	// Write implementation - csv
+	// Same as https://www.quandl.com/data/EOD-End-of-Day-US-Stock-Prices/
+	// Name, Date, Unadjusted Open, Unadjusted High, Unadjusted Low, Unadjusted Close, Unadjusted Volume, Dividends, Splits, Adjusted Open, Adjusted High, Adjusted Low, Adjusted Close, Adjusted Volume	
 	string WriteImpl(output val, T = string)(string option = "")
 		if(val == output.csv)
 	{	
-		return "";
+		string result = "";
+		Frame[] data_frame = Write!(output.frame, logger.off, Frame[]); 
+		for(int i = 0; i<data_frame.length; i++)
+		{
+			result~=_name~",";
+			result~=to!string(data_frame[i].date)~",";
+			result~=to!string(data_frame[i].price.open)~",";
+			result~=to!string(data_frame[i].price.high)~",";
+			result~=to!string(data_frame[i].price.low)~",";
+			result~=to!string(data_frame[i].price.close)~",";
+			result~=to!string(data_frame[i].price.volume)~",";
+			result~=to!string(data_frame[i].div.amount)~",";
+			if(data_frame[i].split.numerator != 0 && data_frame[i].split.denominator != 0)
+			{
+				result~=to!string(data_frame[i].split.numerator/data_frame[i].split.denominator)~",";
+			}
+			else
+			{
+				result~=to!string("1.0"~",");
+			}
+			result~="0.0"~","; // Adjusted open n.a. in yahoo finance
+			result~="0.0"~","; // Adjusted high n.a. in yahoo finance
+			result~="0.0"~","; // Adjusted low n.a. in yahoo finance
+			result~=to!string(data_frame[i].price.adjclose)~","; 
+			result~="0.0"; // Adjusted volume n.a. in yahoo finance
+			result~="\n";
+		}		
+		return result;
 	}
 
 	// Write implementation - csv
