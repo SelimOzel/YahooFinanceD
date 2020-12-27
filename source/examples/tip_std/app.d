@@ -14,8 +14,8 @@ void main()
 	// 2- Compute year-to-day standard deviation
 	// 3- Obtain monthly standard deviation
 	string name = "TIP";
-	Date begin = Date(2019, 9, 9);
-	Date end = Date(2020, 9, 9);
+	Date begin = Date(2019, 11, 20);
+	Date end = Date(2020, 11, 20);
 
 	YahooFinanceD simpleMiner;
 	simpleMiner.Mine(begin, end, name, intervals.daily); 
@@ -32,6 +32,6 @@ void main()
 	for(int i = 0; i<TIP.length; i++) { sum += pow((TIP[i].price.close-mean),2); }
 	std = sum/n;
 
-	writeln("Yearly volatility of TIP between 2019 and 2020: "~to!string(std));
-	writeln("Monthly volatility of TIP between 2019 and 2020: "~to!string(std/sqrt(12.0)));
+	writeln("Yearly volatility of UBER between 2019 and 2020: "~to!string(std));
+	writeln("Monthly volatility of UBER between 2019 and 2020: "~to!string(std/sqrt(12.0)));
 }

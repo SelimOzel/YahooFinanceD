@@ -15,6 +15,14 @@ subPackage {
 }
 
 subPackage {
+	name "example-csv" 
+	sourcePaths "source/examples/csv" "lib"
+	importPaths "lib"
+	targetName "example-csv"
+	targetType "executable"
+}
+
+subPackage {
 	name "example-dataframe" 
 	sourcePaths "source/examples/dataframe" "lib"
 	importPaths "lib"
