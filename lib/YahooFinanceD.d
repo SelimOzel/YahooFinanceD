@@ -92,6 +92,7 @@ public:
 		{
 			Split s;
 			Dividend d;
+			d.amount = 0;
 
 			for (int i = _j["prices"].array.length-1; i>=0; i--)
 			{
@@ -228,8 +229,6 @@ public:
 	string WriteImpl(output val, T = string)(string option = "")
 		if(val == output.csv)
 	{	
-		import std.stdio: writeln;
-
 		string result = "";
 		Frame[] data_frame = Write!(output.frame, logger.off, Frame[]); 
 		for(int i = 0; i<data_frame.length; i++)
