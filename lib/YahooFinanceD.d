@@ -228,12 +228,19 @@ public:
 	string WriteImpl(output val, T = string)(string option = "")
 		if(val == output.csv)
 	{	
+		import std.stdio: writeln;
+
 		string result = "";
 		Frame[] data_frame = Write!(output.frame, logger.off, Frame[]); 
 		for(int i = 0; i<data_frame.length; i++)
 		{
 			result~=_name~",";
-			result~=to!string(data_frame[i].date)~",";
+
+			// converts yyyymmdd to yyyy-mm-dd
+			string date_conversion = data_frame[i].date.toISOString();
+			date_conversion = date_conversion[0 .. 4]~"-"~date_conversion[4 .. 6]~"-"~date_conversion[6 .. 8];
+
+			result~=to!string(date_conversion)~",";
 			result~=to!string(data_frame[i].price.open)~",";
 			result~=to!string(data_frame[i].price.high)~",";
 			result~=to!string(data_frame[i].price.low)~",";
