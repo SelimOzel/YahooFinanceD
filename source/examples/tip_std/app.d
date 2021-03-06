@@ -20,17 +20,11 @@ void main()
 	YahooFinanceD simpleMiner;
 	simpleMiner.Mine(begin, end, name, intervals.daily); 
 	Frame[] TIP = simpleMiner.Write!(output.frame, logger.off, Frame[]); 
-
-	double sum = 0;
-	double mean = 0;
-	double std = 0;
+	
 	int n = TIP.length;
-	for(int i = 0; i<TIP.length; i++) { sum += TIP[i].price.close; }
-	mean = sum/n;
-
-	sum = 0;
-	for(int i = 0; i<TIP.length; i++) { sum += pow((TIP[i].price.close-mean),2); }
-	std = sum/n;
+	double[] TIPclosePrices;
+	for(int i = 0; i<n; i++) { TIPclosePrices ~= TIP[i].price.close; }
+	double std = compute_std(TIPclosePrices, compute_mean(TIPclosePrices));
 
 	writeln("Yearly volatility of TIP between 2019 and 2020: "~to!string(std));
 	writeln("Monthly volatility of TIP between 2019 and 2020: "~to!string(std/sqrt(12.0)));
