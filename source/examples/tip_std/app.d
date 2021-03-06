@@ -7,8 +7,7 @@ import std.math: sqrt, pow;
 import YahooFinanceD; // Miner class
 import Statistics; // Helper functions
 
-void main()
-{
+void main() {
 	// Example: 
 	// 1- Mine TIP between September 9, 2019 and September 9, 2020
 	// 2- Compute year-to-day standard deviation

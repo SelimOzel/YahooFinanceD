@@ -6,8 +6,7 @@ import std.conv;
 // Miner class
 import YahooFinanceD;
 
-void main()
-{
+void main() {
 	// Example: Mining Apple between December 12, 1980 and Jun 6, 2020
 	string name = "MSFT";
 	Date begin = Date(1980, 12, 12);

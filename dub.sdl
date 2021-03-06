@@ -31,6 +31,14 @@ subPackage {
 }
 
 subPackage {
+	name "example-gold" 
+	sourcePaths "source/examples/gold" "lib"
+	importPaths "lib"
+	targetName "example-gold"
+	targetType "executable"
+}
+
+subPackage {
 	name "example-json" 
 	sourcePaths "source/examples/json" "lib"
 	importPaths "lib"

@@ -6,8 +6,7 @@ import std.conv;
 // Miner class
 import YahooFinanceD;
 
-void main()
-{
+void main() {
 	// Example: Mining between December 12, 2018 and Jun 6, 2020 and creating two universes of stocks
 	// One for tech the other one for big three car manufacturers
 	string name = "";
