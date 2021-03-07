@@ -8,23 +8,27 @@ import YahooFinanceD; // Miner class
 import Statistics; // Helper functions
 
 void main() {
-	// Example: 
-	// 1- Mine TIP between September 9, 2019 and September 9, 2020
-	// 2- Compute year-to-day standard deviation
-	// 3- Obtain monthly standard deviation
-	string name = "TIP";
 	Date begin = Date(2019, 12, 20);
 	Date end = Date(2020, 12, 20);
-
 	YahooFinanceD simpleMiner;
-	simpleMiner.Mine(begin, end, name, intervals.daily); 
-	Frame[] TIP = simpleMiner.Write!(output.frame, logger.off, Frame[]); 
 	
-	int n = TIP.length;
-	double[] TIPclosePrices;
-	for(int i = 0; i<n; i++) { TIPclosePrices ~= TIP[i].price.close; }
-	double std = compute_std(TIPclosePrices, compute_mean(TIPclosePrices));
+	writeln("TIP volatility script\n");
 
-	writeln("Yearly volatility of TIP between 2019 and 2020: "~to!string(std));
-	writeln("Monthly volatility of TIP between 2019 and 2020: "~to!string(std/sqrt(12.0)));
+	// Standard deviations
+	string[1] names = ["TIP"];
+	for(int k = 0; k<names.length; k++){
+		string name = names[k]; 
+		double[] closePrices;
+		double std;
+		int n = 0;
+
+		simpleMiner.Mine!(logger.off)(begin, end, name, intervals.daily); 
+		Frame[] FRAME = simpleMiner.Write!(output.frame, logger.off, Frame[]); 
+		n = FRAME.length;
+		for(int i = 0; i<n; i++) { closePrices ~= FRAME[i].price.close; }
+		std = compute_std(closePrices);
+		writeln("Yearly volatility of "~ name ~ " between 2019 and 2020: "~to!string(std));
+		writeln("Monthly volatility of "~ name ~ " between 2019 and 2020: "~to!string(std/sqrt(12.0)));		
+		writeln();
+	}
 }
