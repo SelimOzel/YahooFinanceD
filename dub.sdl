@@ -47,6 +47,15 @@ subPackage {
 }
 
 subPackage {
+	name "example-soxx_analysis" 
+	sourcePaths "source/examples/soxx_analysis" "lib"
+	importPaths "lib"
+	targetName "example-soxx_analysis"
+	targetType "executable"
+	dependency "matplotlib-d" version="~>0.1.4"
+}
+
+subPackage {
 	name "example-tip_std" 
 	sourcePaths "source/examples/tip_std" "lib"
 	importPaths "lib"

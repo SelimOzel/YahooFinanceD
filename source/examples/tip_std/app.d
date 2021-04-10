@@ -18,15 +18,15 @@ void main() {
 	string[1] names = ["TIP"];
 	for(int k = 0; k<names.length; k++){
 		string name = names[k]; 
-		double[] closePrices;
+		double[] closePrices_perc;
 		double std;
 		int n = 0;
 
 		simpleMiner.Mine!(logger.off)(begin, end, name, intervals.daily); 
 		Frame[] FRAME = simpleMiner.Write!(output.frame, logger.off, Frame[]); 
 		n = FRAME.length;
-		for(int i = 0; i<n; i++) { closePrices ~= FRAME[i].price.close; }
-		std = compute_std(closePrices);
+		for(int i = 0; i<n; i++) { closePrices_perc ~= ((FRAME[i].price.close/FRAME[0].price.close)-1.0) * 100; }
+		std = compute_std(closePrices_perc);
 		writeln("Yearly volatility of "~ name ~ " between 2019 and 2020: "~to!string(std));
 		writeln("Monthly volatility of "~ name ~ " between 2019 and 2020: "~to!string(std/sqrt(12.0)));		
 		writeln();
