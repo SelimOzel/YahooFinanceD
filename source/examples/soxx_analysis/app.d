@@ -7,6 +7,7 @@ import std.file: write;
 
 import YahooFinanceD; // Miner class
 import Statistics; // Helper functions
+import plt = matplotlibd.pyplot; // Charts
 
 void main() {
 	Date begin = Date(2019, 12, 20);

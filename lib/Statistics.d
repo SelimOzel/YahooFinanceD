@@ -17,9 +17,10 @@ double compute_mean(double[] array_IN) pure {
 */
 double compute_std(double[] array_IN) pure {
 	double sum = 0;
+	double mean = compute_mean(array_IN);
 	int n = array_IN.length;
-	for(int i = 0; i<n; i++) { sum += pow((array_IN[i]-compute_mean(array_IN)),2); }
-	return sum/n;	
+	for(int i = 0; i<n; i++) { sum += pow((array_IN[i]-mean),2); }
+	return sqrt(sum/n);	
 }
 
 /*
