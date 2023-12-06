@@ -17,4 +17,4 @@ dub run yahoofinanced:example-soxx_analysis
 dub run yahoofinanced:example-tip_std
 ```
 
-**Test:** `dub test yahoofinanced:unittest`. 
+**Test:** `dub test yahoofinanced:unittest` or use `./ci.sh` to build & test everything. 
