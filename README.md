@@ -17,4 +17,4 @@ dub run yahoofinanced:example-soxx_analysis
 dub run yahoofinanced:example-tip_std
 ```
 
-**Test:** On Windows run `dub test yahoofinanced:unittest`. 
+**Test:** `dub test yahoofinanced:unittest`. 
