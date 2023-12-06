@@ -5,7 +5,15 @@ import std.conv;
 import std.math: sqrt, pow;
 import std.file: write;
 
-import YahooFinanceD; // Miner class
+import YahooFinanceD: 
+YahooFinanceD,
+output,
+logger,
+intervals,
+Frame,
+Price,
+Dividend,
+Split;
 import Statistics; // Helper functions
 import plt = matplotlibd.pyplot; // Charts
 
@@ -38,7 +46,7 @@ void main() {
 		simpleMiner.Mine!(logger.off)(begin, end, name, intervals.daily); 
 		Frame[] FRAME = simpleMiner.Write!(output.frame, logger.off, Frame[]); 
 		FRAME_str = simpleMiner.Write!(output.csv, logger.off, string); // write prices as csv to a string with logger off
-		n = FRAME.length;
+		n = to!int(FRAME.length);
 		for(int i = 0; i<n; i++) { closePrices ~= FRAME[i].price.close; }
 		correlation = compute_correlation(closePrices, closePrices_SOXX);
 		writeln("Correlation between SOXX and "~ name ~ " between 2019 and 2020: "~to!string(correlation));		

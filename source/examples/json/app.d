@@ -4,7 +4,15 @@ import std.string;
 import std.conv;
 
 // Miner class
-import YahooFinanceD;
+import YahooFinanceD: 
+YahooFinanceD,
+output,
+logger,
+intervals,
+Frame,
+Price,
+Dividend,
+Split;
 
 void main() {
 	// Example: Mining Apple between December 12, 1980 and Jun 6, 2020

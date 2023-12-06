@@ -94,7 +94,7 @@ public:
 			Dividend d;
 			d.amount = 0;
 
-			for (int i = _j["prices"].array.length-1; i>=0; i--)
+			for (int i = to!int(_j["prices"].array.length)-1; i>=0; i--)
 			{
 				Frame frame;
 				string date = to!string(_j["prices"][i]["date"]);
@@ -354,13 +354,13 @@ public:
 
 	int PriceLength()
 	{
-		if(_miningDone) return _j["prices"].array.length;
+		if(_miningDone) return to!int(_j["prices"].array.length);
 		else return -1; 
 	}
 
 	int EventsLength()
 	{
-		if(_miningDone) return _j["eventsData"].array.length;
+		if(_miningDone) return to!int(_j["eventsData"].array.length);
 		else return -1; 
 	}	
 

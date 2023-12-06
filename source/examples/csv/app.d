@@ -4,7 +4,15 @@ import std.string;
 import std.conv;
 
 // Miner class
-import YahooFinanceD;
+import YahooFinanceD: 
+YahooFinanceD,
+output,
+logger,
+intervals,
+Frame,
+Price,
+Dividend,
+Split;
 
 void main() {
 	// Example: Mining between December 12, 2018 and Jun 6, 2020 and creating two universes of stocks

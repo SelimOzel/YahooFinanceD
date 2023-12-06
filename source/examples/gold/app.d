@@ -4,8 +4,17 @@ import std.string;
 import std.conv;
 import std.math: sqrt, pow;
 
-import YahooFinanceD; // Miner class
-import Statistics; // Helper functions
+import YahooFinanceD: 
+YahooFinanceD,
+output,
+logger,
+intervals,
+Frame,
+Price,
+Dividend,
+Split;
+
+import Statistics;
 
 void main() {
 	Date begin = Date(2019, 12, 20);
@@ -29,7 +38,7 @@ void main() {
 
 		simpleMiner.Mine!(logger.off)(begin, end, name, intervals.daily); 
 		Frame[] FRAME = simpleMiner.Write!(output.frame, logger.off, Frame[]); 
-		n = FRAME.length;
+		n = to!int(FRAME.length);
 		for(int i = 0; i<n; i++) { closePrices ~= FRAME[i].price.close; }
 		correlation = compute_correlation(closePrices, closePrices_GOLD);
 		writeln("Correlation between GLD and "~ name ~ " between 2019 and 2020: "~to!string(correlation));		

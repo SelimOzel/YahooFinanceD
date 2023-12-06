@@ -6,3 +6,5 @@ docs.json
 *.lst
 *.json
 *.csv
+example-*
+yahoofinanced-unittest-test-application
