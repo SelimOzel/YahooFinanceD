@@ -303,6 +303,10 @@ public:
 		// Assemble query. Use unix time.
 		_query = "https://finance.yahoo.com/quote/"~name~"/history?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&filter=history&frequency="~interval;
 
+/*
+https://query1.finance.yahoo.com/v7/finance/download/MSFT?period1=1670299303&period2=1701835303&interval=1mo&events=history&includeAdjustedClose=true
+*/
+
 		// Curl it
 		string content;
 		try
