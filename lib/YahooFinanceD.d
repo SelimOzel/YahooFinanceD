@@ -303,9 +303,11 @@ public:
 		// Assemble query. Use unix time.
 		_query = "https://finance.yahoo.com/quote/"~name~"/history?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&filter=history&frequency="~interval;
 
-/*
-https://query1.finance.yahoo.com/v7/finance/download/MSFT?period1=1670299303&period2=1701835303&interval=1mo&events=history&includeAdjustedClose=true
-*/
+		_query_shadow = "https://query1.finance.yahoo.com/v7/finance/download/"~name~"?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&events=history&includeAdjustedClose=true";
+
+		import std.stdio: writeln;
+		writeln(_query_shadow);
+		writeln(to!string( get(_query_shadow)));
 
 		// Curl it
 		string content;
@@ -379,6 +381,8 @@ private:
 
 	string _name; // name of the currently mined stock
 	string _query; // url query for the stock
+
+	string _query_shadow;
 
 	Date _beginDate; // begin date in date.time
 	Date _endDate; // end daye in date.time
