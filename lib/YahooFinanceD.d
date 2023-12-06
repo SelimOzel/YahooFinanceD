@@ -307,7 +307,19 @@ public:
 
 		import std.stdio: writeln;
 		string shadow_content = to!string( get(_query_shadow));
+		writeln(_query);
 		writeln(_query_shadow);
+		//writeln(shadow_content);
+
+		_query_shadow = "https://query1.finance.yahoo.com/v7/finance/download/"~name~"?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&events=divs&includeAdjustedClose=true";
+		writeln(_query_shadow);	
+		shadow_content = to!string( get(_query_shadow));
+		//writeln(shadow_content);
+
+		_query_shadow = "https://query1.finance.yahoo.com/v7/finance/download/"~name~"?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&events=splits&includeAdjustedClose=true";
+		writeln(_query_shadow);	
+		shadow_content = to!string( get(_query_shadow));
+		writeln(shadow_content);		
 
 		// Curl it
 		string content;
