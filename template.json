@@ -1,36 +1,31 @@
 {
-    "customers": [
+    "prices": 
+    [
         {
-            "cluster" : {
-                "flights": 4,
-                "profit": 5245,
-                "clv": 2364,
-                "segment" : {
-                    "flights": 2,
-                    "profit": 2150,
-                    "clv": 1564,
-                    "node" : {
-                        "xpos": 1,
-                        "ypos": 2 
-                    } 
-                } 
-            } 
+            "adjclose" : 26,
+            "open" : 24,
+            "high" : 32,
+            "low" : 22,
+            "close" : 30,
         },
         {
-            "cluster" : {
-                "flights": 4,
-                "profit": 5245,
-                "clv": 2364,
-                "segment" : {
-                    "flights": 2,
-                    "profit": 2150,
-                    "clv": 1564,
-                    "node" : {
-                        "xpos": 1,
-                        "ypos": 2 
-                    } 
-                } 
-            } 
-        } 
+            "type" : "dividend",
+            "amount": 0.25,
+            "adjclose" : 48,
+            "open" : 24,
+            "high" : 64,
+            "low" : 44,
+            "close" : 60,
+        },
+        {
+            "type" : "split",
+            "numerator": 4,
+            "denominator": 5,
+            "adjclose" : 13,
+            "open" : 12,
+            "high" : 16,
+            "low" : 11,
+            "close" : 15,
+        },
     ]
 }
