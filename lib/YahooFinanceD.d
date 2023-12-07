@@ -155,82 +155,13 @@ public:
 					s.numerator = 0;
 
 					Price price;
+					price.adjclose = to!double(_j["prices"][i]["adjclose"].str);
+					price.close = to!double(_j["prices"][i]["close"].str);
+					price.high = to!double(_j["prices"][i]["high"].str);
+					price.low = to!double(_j["prices"][i]["low"].str);
+					price.open = to!double(_j["prices"][i]["open"].str);
+					price.volume = to!int(_j["prices"][i]["volume"].str);
 
-					// adjclose
-					if(_j["prices"][i]["adjclose"].type() == JSONType.integer)
-					{
-						price.adjclose = to!double(_j["prices"][i]["adjclose"].integer);
-					}
-					else if(_j["prices"][i]["adjclose"].type() == JSONType.float_)
-					{
-						price.adjclose = _j["prices"][i]["adjclose"].floating;
-					}	
-					else if(_j["prices"][i]["adjclose"].type() == JSONType.null_)
-					{
-						continue;
-					}		
-
-					// close
-					if(_j["prices"][i]["close"].type() == JSONType.integer)
-					{
-						price.close = to!double(_j["prices"][i]["close"].integer);
-					}
-					else if(_j["prices"][i]["close"].type() == JSONType.float_)
-					{
-						price.close = _j["prices"][i]["close"].floating;
-					}	
-					else if(_j["prices"][i]["close"].type() == JSONType.null_)
-					{
-						continue;
-					}	
-
-					// high
-					if(_j["prices"][i]["high"].type() == JSONType.integer)
-					{
-						price.high = to!double(_j["prices"][i]["high"].integer);
-					}
-					else if(_j["prices"][i]["high"].type() == JSONType.float_)
-					{
-						price.high = _j["prices"][i]["high"].floating;
-					}	
-					else if(_j["prices"][i]["high"].type() == JSONType.null_)
-					{
-						continue;
-					}	
-
-					// low
-					if(_j["prices"][i]["low"].type() == JSONType.integer)
-					{
-						price.low = to!double(_j["prices"][i]["low"].integer);
-					}
-					else if(_j["prices"][i]["low"].type() == JSONType.float_)
-					{
-						price.low = _j["prices"][i]["low"].floating;
-					}	
-					else if(_j["prices"][i]["low"].type() == JSONType.null_)
-					{
-						continue;
-					}
-
-					// open
-					if(_j["prices"][i]["open"].type() == JSONType.integer)
-					{
-						price.open = to!double(_j["prices"][i]["open"].integer);
-					}
-					else if(_j["prices"][i]["open"].type() == JSONType.float_)
-					{
-						price.open = _j["prices"][i]["open"].floating;
-					}	
-					else if(_j["prices"][i]["open"].type() == JSONType.null_)
-					{
-						continue;
-					}
-
-					// volume
-					if(_j["prices"][i]["open"].type() != JSONType.null_)
-					{
-						price.volume = _j["prices"][i]["volume"].integer;
-					}
 					frame.price = price;
 					_pricesWritten++;
 					result ~= frame;
