@@ -1,4 +1,5 @@
 import std.net.curl;
+import std.csv: csvReader;
 import std.datetime;
 import std.file;
 import std.conv;
@@ -36,6 +37,31 @@ struct Split
 {
 	long denominator;
 	long numerator;
+}
+
+// CSV Readers
+struct Price_csvReader
+{
+	string date;
+	string open;
+	string high;
+	string low;
+	string close;
+	string adjclose;
+	string volume;
+}
+
+struct Split_csvReader
+{
+	string date;
+	string denominator;
+	string numerator;
+}
+
+struct Dividend_csvReader
+{
+	string date;
+	string amount;
 }
 
 // Yahoo finance data scraper written in Dlang. Selim Ozel
@@ -301,55 +327,55 @@ public:
 		_pricesWritten = 0; 
 
 		// Assemble query. Use unix time.
-		_query = "https://finance.yahoo.com/quote/"~name~"/history?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&filter=history&frequency="~interval;
-
-		_query_shadow = "https://query1.finance.yahoo.com/v7/finance/download/"~name~"?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&events=history&includeAdjustedClose=true";
-
 		import std.stdio: writeln;
-		string shadow_content = to!string( get(_query_shadow));
-		writeln(_query);
-		writeln(_query_shadow);
-		//writeln(shadow_content);
-
-		_query_shadow = "https://query1.finance.yahoo.com/v7/finance/download/"~name~"?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&events=divs&includeAdjustedClose=true";
-		writeln(_query_shadow);	
-		shadow_content = to!string( get(_query_shadow));
-		//writeln(shadow_content);
-
-		_query_shadow = "https://query1.finance.yahoo.com/v7/finance/download/"~name~"?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&events=splits&includeAdjustedClose=true";
-		writeln(_query_shadow);	
-		shadow_content = to!string( get(_query_shadow));
-		writeln(shadow_content);		
 
 		// Curl it
-		string content;
 		try
 		{
-			content = to!string(get(_query));
+			_query = "https://query1.finance.yahoo.com/v7/finance/download/"~name~"?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&events=history&includeAdjustedClose=true";
+			string shadow_content = to!string( get(_query));
+			auto prices = shadow_content.csvReader!Price_csvReader(',');
+
+			_query = "https://query1.finance.yahoo.com/v7/finance/download/"~name~"?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&events=divs&includeAdjustedClose=true";
+			shadow_content = to!string( get(_query));
+			auto splits = shadow_content.csvReader!Split_csvReader(',');
+
+			_query = "https://query1.finance.yahoo.com/v7/finance/download/"~name~"?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&events=splits&includeAdjustedClose=true";
+			shadow_content = to!string( get(_query));
+			auto dividends = shadow_content.csvReader!Dividend_csvReader(',');
+
+			JSONValue prices_json = [ "prices": "" ];
+			//prices_json.object["prices"] = JSONValue( [""] );
+			JSONValue price_json;
+			int price_index = 0;
+			foreach (price; prices) 
+			{
+				price_json["date"] = JSONValue(price.date);
+				price_json["adjclose"] = JSONValue(price.adjclose);
+				price_json["close"] = JSONValue(price.close);
+				price_json["high"] = JSONValue(price.high);
+				price_json["low"] = JSONValue(price.low);
+				price_json["open"] = JSONValue(price.open);
+				price_json["volume"] = JSONValue(price.volume);
+				if(price_index == 0)
+				{
+					prices_json.object["prices"] = JSONValue( [price_json] );
+				}
+				else prices_json["prices"].array ~= price_json;
+				++price_index;
+			}
+			writeln(price_json.toPrettyString);
+			writeln(prices_json.toPrettyString);
+
+			_j = prices_json;
+			_miningDone = true;	 
 		}
 		catch (CurlException e)
 		{
 			_exceptions[_exceptionIndex] = e.msg;
 			_exceptionIndex++;
 			_miningDone = false;
-		}	
-
-		// Get the raw string between root.App.main and (this)
-		string output = CutString(content, "root.App.main = ", "(this));");
-
-		// Convert raw string to json
-		try
-		{
-			_j = parseJSON(output);
-			_j = _j["context"]["dispatcher"]["stores"]["HistoricalPriceStore"];	
-			_miningDone = true;	    
 		}
-		catch (JSONException e)
-		{
-			_exceptions[_exceptionIndex] = e.msg;
-			_exceptionIndex++;
-    		_miningDone = false;				
-		} 
 	}
 
 	// Mine logger
@@ -393,8 +419,6 @@ private:
 
 	string _name; // name of the currently mined stock
 	string _query; // url query for the stock
-
-	string _query_shadow;
 
 	Date _beginDate; // begin date in date.time
 	Date _endDate; // end daye in date.time
