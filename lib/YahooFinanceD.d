@@ -124,7 +124,10 @@ public:
 			{
 				Frame frame;
 				string date = to!string(_j["prices"][i]["date"]);
-				frame.date = cast(Date)SysTime(unixTimeToStdTime(to!long(date)));
+				int year = to!int(date[1 .. 5]);
+				int month = to!int(date[6 .. 8]);
+				int day = to!int(date[9 .. 11]);
+				frame.date = Date(year, month, day);
 
 				if("type" in _j["prices"][i])
 				{
@@ -364,7 +367,7 @@ public:
 				else prices_json["prices"].array ~= price_json;
 				++price_index;
 			}
-			writeln(price_json.toPrettyString);
+			//writeln(price_json.toPrettyString);
 			writeln(prices_json.toPrettyString);
 
 			_j = prices_json;
