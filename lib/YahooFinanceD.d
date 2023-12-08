@@ -120,7 +120,7 @@ public:
 			Dividend d;
 			d.amount = 0;
 
-			for (int i = to!int(_j["prices"].array.length)-1; i>=0; i--)
+			for (int i = 0; i<to!int(_j["prices"].array.length); ++i)
 			{
 				Frame frame;
 				string date = to!string(_j["prices"][i]["date"]);
@@ -160,7 +160,7 @@ public:
 					price.high = to!double(_j["prices"][i]["high"].str);
 					price.low = to!double(_j["prices"][i]["low"].str);
 					price.open = to!double(_j["prices"][i]["open"].str);
-					price.volume = to!int(_j["prices"][i]["volume"].str);
+					price.volume = to!long(_j["prices"][i]["volume"].str);
 
 					frame.price = price;
 					_pricesWritten++;
@@ -278,12 +278,12 @@ public:
 			shadow_content = to!string( get(_query));
 			auto dividends = shadow_content.csvReader!Dividend_csvReader(',');
 
-			JSONValue prices_json = [ "prices": "" ];
-			//prices_json.object["prices"] = JSONValue( [""] );
-			JSONValue price_json;
+			_j = [ "prices": "" ];
+			
 			int price_index = 0;
 			foreach (price; prices) 
 			{
+				JSONValue price_json;
 				price_json["date"] = JSONValue(price.date);
 				price_json["adjclose"] = JSONValue(price.adjclose);
 				price_json["close"] = JSONValue(price.close);
@@ -291,17 +291,20 @@ public:
 				price_json["low"] = JSONValue(price.low);
 				price_json["open"] = JSONValue(price.open);
 				price_json["volume"] = JSONValue(price.volume);
-				if(price_index == 0)
+				if(price_index == 1)
 				{
-					prices_json.object["prices"] = JSONValue( [price_json] );
+					_j["prices"] = JSONValue( [price_json] );
 				}
-				else prices_json["prices"].array ~= price_json;
-				++price_index;
+				else if(price_index > 1) 
+				{
+					_j["prices"].array ~= price_json;
+				}
+				price_index += 1;
 			}
-			//writeln(price_json.toPrettyString);
-			writeln(prices_json.toPrettyString);
 
-			_j = prices_json;
+			//writeln(_j.toPrettyString);
+			//writeln();
+
 			_miningDone = true;	 
 		}
 		catch (CurlException e)
