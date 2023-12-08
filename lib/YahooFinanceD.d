@@ -54,8 +54,7 @@ struct Price_csvReader
 struct Split_csvReader
 {
 	string date;
-	string denominator;
-	string numerator;
+	string split;
 }
 
 struct Dividend_csvReader
@@ -270,11 +269,11 @@ public:
 			string shadow_content = to!string( get(_query));
 			auto prices = shadow_content.csvReader!Price_csvReader(',');
 
-			_query = "https://query1.finance.yahoo.com/v7/finance/download/"~name~"?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&events=divs&includeAdjustedClose=true";
+			_query = "https://query1.finance.yahoo.com/v7/finance/download/"~name~"?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&events=splits&includeAdjustedClose=true";
 			shadow_content = to!string( get(_query));
 			auto splits = shadow_content.csvReader!Split_csvReader(',');
 
-			_query = "https://query1.finance.yahoo.com/v7/finance/download/"~name~"?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&events=splits&includeAdjustedClose=true";
+			_query = "https://query1.finance.yahoo.com/v7/finance/download/"~name~"?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&events=divs&includeAdjustedClose=true";
 			shadow_content = to!string( get(_query));
 			auto dividends = shadow_content.csvReader!Dividend_csvReader(',');
 
@@ -300,6 +299,18 @@ public:
 					_j["prices"].array ~= price_json;
 				}
 				price_index += 1;
+			}
+
+			foreach (dividend; dividends) 
+			{
+				writeln(dividend.date);
+				writeln(dividend.amount);
+			}
+
+			foreach (split; splits) 
+			{
+				writeln(split.date);
+				writeln(split.split);
 			}
 
 			//writeln(_j.toPrettyString);
