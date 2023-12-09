@@ -8,5 +8,5 @@ import YahooFinanceD;
 
 void main()
 {
-	YahooFinanceD simpleMiner;
+  YahooFinanceD simpleMiner;
 }
