@@ -2,7 +2,7 @@
     "prices": 
     [
         {
-        	"date" : "12-02-2020",
+            "date" : "12-02-2020",
             "adjclose" : 26,
             "close" : 24,
             "high" : 32,
@@ -11,7 +11,7 @@
             "volume" : 1325,
         },
         {
-        	"date" : "12-03-2020",
+            "date" : "12-03-2020",
             "type" : "dividend",
             "amount": 0.25,
             "adjclose" : 48,
@@ -22,7 +22,7 @@
             "volume" : 1323,
         },
         {
-        	"date" : "12-04-2020",
+            "date" : "12-04-2020",
             "type" : "split",
             "numerator": 4,
             "denominator": 5,
