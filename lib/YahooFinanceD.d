@@ -291,26 +291,31 @@ public:
 				price_json["open"] = JSONValue(price.open);
 				price_json["volume"] = JSONValue(price.volume);
 				if(price_index == 1)
-				{
 					_j["prices"] = JSONValue( [price_json] );
-				}
 				else if(price_index > 1) 
-				{
 					_j["prices"].array ~= price_json;
-				}
 				price_index += 1;
 			}
 
+			Dividend_csvReader[] dividend_array;
 			foreach (dividend; dividends) 
-			{
-				writeln(dividend.date);
-				writeln(dividend.amount);
-			}
+				dividend_array ~= dividend; 
 
+			Split_csvReader[] split_array;
 			foreach (split; splits) 
+				split_array ~= split;
+
+			int split_index = 0;
+			int dividend_index = 0;
+			for(int i = 0; i<_j["prices"].array.length; ++i)
 			{
-				writeln(split.date);
-				writeln(split.split);
+				// FIX by converting to date and make comparison as a date.
+				if(to!string(_j["prices"][i]["date"]) == dividend_array[dividend_index].date)
+				{
+					writeln("Is this working?");
+					_j["prices"][i]["amount"] = JSONValue(dividend_array[dividend_index].amount);
+					dividend_index += 1;
+				}
 			}
 
 			//writeln(_j.toPrettyString);
