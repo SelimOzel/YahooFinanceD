@@ -313,34 +313,38 @@ public:
         int day = to!int(date[9 .. 11]);
         Date date_prices = Date(year, month, day);
 
-        date = dividend_array[dividend_index].date;
-        year = to!int(date[0 .. 4]);
-        month = to!int(date[5 .. 7]);
-        day = to!int(date[8 .. 10]);
-        Date date_dividend = Date(year, month, day);
-
-        date = dividend_array[split_index].date;
-        year = to!int(date[0 .. 4]);
-        month = to!int(date[5 .. 7]);
-        day = to!int(date[8 .. 10]);
-        Date date_splits = Date(year, month, day);
-
-        if(date_prices >= date_dividend)
+        if(dividend_array.length > 0 && dividend_index<dividend_array.length)
         {
-          if(dividend_index<dividend_array.length)
+          date = dividend_array[dividend_index].date;
+          year = to!int(date[0 .. 4]);
+          month = to!int(date[5 .. 7]);
+          day = to!int(date[8 .. 10]);
+          Date date_dividend = Date(year, month, day);
+          if(date_prices >= date_dividend)
           {
-            _j["prices"][i]["amount"] = JSONValue(dividend_array[dividend_index].amount);
-            dividend_index += 1;         
+            if(dividend_index<dividend_array.length)
+            {
+              _j["prices"][i]["amount"] = JSONValue(dividend_array[dividend_index].amount);
+              dividend_index += 1;         
+            }
           }
         }
 
-        if(date_prices >= date_splits)
+        if(split_array.length > 0 && split_index<split_array.length)
         {
-          if(split_index<split_array.length)
+          date = split_array[split_index].date;
+          year = to!int(date[0 .. 4]);
+          month = to!int(date[5 .. 7]);
+          day = to!int(date[8 .. 10]);
+          Date date_splits = Date(year, month, day);
+          if(date_prices >= date_splits)
           {
-            _j["prices"][i]["denominator"] = to!int(split_array[split_index].split[0])-48;
-            _j["prices"][i]["numerator"] = to!int(split_array[split_index].split[2])-48;
-            split_index += 1;       
+            if(split_index<split_array.length)
+            {
+              _j["prices"][i]["denominator"] = to!int(split_array[split_index].split[0])-48;
+              _j["prices"][i]["numerator"] = to!int(split_array[split_index].split[2])-48;
+              split_index += 1;       
+            }
           }
         }
       }
