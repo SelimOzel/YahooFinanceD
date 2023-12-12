@@ -300,26 +300,37 @@ public:
       Dividend_csvReader[] dividend_array;
       foreach (dividend; dividends) 
         dividend_array ~= dividend; 
+      dividend_array = dividend_array[1 .. dividend_array.length];
 
       Split_csvReader[] split_array;
       foreach (split; splits) 
         split_array ~= split;
+      split_array = split_array[1 .. split_array.length];
 
       int split_index = 0;
       int dividend_index = 0;
       for(int i = 0; i<_j["prices"].array.length; ++i)
       {
-        // FIX by converting to date and make comparison as a date.
-        if(to!string(_j["prices"][i]["date"]) == dividend_array[dividend_index].date)
+        string date = to!string(_j["prices"][i]["date"]);
+        int year = to!int(date[1 .. 5]);
+        int month = to!int(date[6 .. 8]);
+        int day = to!int(date[9 .. 11]);
+        Date date_prices = Date(year, month, day);
+
+        date = dividend_array[dividend_index].date;
+        year = to!int(date[0 .. 4]);
+        month = to!int(date[5 .. 7]);
+        day = to!int(date[8 .. 10]);
+        Date date_dividend = Date(year, month, day);
+
+        if(date_prices >= date_dividend)
         {
-          writeln("Is this working?");
           _j["prices"][i]["amount"] = JSONValue(dividend_array[dividend_index].amount);
           dividend_index += 1;
         }
       }
 
-      //writeln(_j.toPrettyString);
-      //writeln();
+      writeln(_j.toPrettyString);
 
       _miningDone = true;  
     }
