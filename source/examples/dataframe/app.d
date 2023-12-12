@@ -27,7 +27,6 @@ void main() {
   for(int i = 0; i<apple.length; i++)
   {
     // Header
-    /*
     writeln();
     writeln(apple[i].date);
 
@@ -39,7 +38,7 @@ void main() {
       " low: "~to!string(apple[i].price.low)~
       " open: "~to!string(apple[i].price.high)~
       " volume: "~to!string(apple[i].price.volume));
-    */
+
     // Corporate actions
     if(apple[i].div.amount != 0)
     {

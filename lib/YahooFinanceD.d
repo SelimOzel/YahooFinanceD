@@ -128,20 +128,18 @@ public:
         int day = to!int(date[9 .. 11]);
         frame.date = Date(year, month, day);
 
-        if("type" in _j["prices"][i])
+        if("denominator" in _j["prices"][i])
         {
-          string type = to!string(_j["prices"][i]["type"]);
-          if(type == "\"SPLIT\"") 
-          {
-            s.denominator = _j["prices"][i]["denominator"].integer;
-            s.numerator = _j["prices"][i]["numerator"].integer;
-            _splitsWritten++;
-          }
-          if(type == "\"DIVIDEND\"") 
-          { 
-            d.amount = to!double(_j["prices"][i]["amount"].floating);
-            _divsWritten++;
-          }         
+          s.denominator = _j["prices"][i]["denominator"].integer;
+          s.numerator = _j["prices"][i]["numerator"].integer;
+          _splitsWritten++;    
+        }
+        else if ("amount" in _j["prices"][i])
+        {
+          string amount_s = _j["prices"][i]["amount"].str;
+          amount_s = amount_s[1 .. amount_s.length-1];
+          d.amount = to!double(amount_s);
+          _divsWritten++;
         }
         else
         {
@@ -259,12 +257,10 @@ public:
     _splitsWritten = 0;
     _pricesWritten = 0; 
 
-    // Assemble query. Use unix time.
-    import std.stdio: writeln;
-
     // Curl it
     try
     {
+      // Assemble query. Use unix time.
       _query = "https://query1.finance.yahoo.com/v7/finance/download/"~name~"?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&events=history&includeAdjustedClose=true";
       string shadow_content = to!string( get(_query));
       auto prices = shadow_content.csvReader!Price_csvReader(',');
@@ -323,14 +319,31 @@ public:
         day = to!int(date[8 .. 10]);
         Date date_dividend = Date(year, month, day);
 
+        date = dividend_array[split_index].date;
+        year = to!int(date[0 .. 4]);
+        month = to!int(date[5 .. 7]);
+        day = to!int(date[8 .. 10]);
+        Date date_splits = Date(year, month, day);
+
         if(date_prices >= date_dividend)
         {
-          _j["prices"][i]["amount"] = JSONValue(dividend_array[dividend_index].amount);
-          dividend_index += 1;
+          if(dividend_index<dividend_array.length)
+          {
+            _j["prices"][i]["amount"] = JSONValue(dividend_array[dividend_index].amount);
+            dividend_index += 1;         
+          }
+        }
+
+        if(date_prices >= date_splits)
+        {
+          if(split_index<split_array.length)
+          {
+            _j["prices"][i]["denominator"] = to!int(split_array[split_index].split[0])-48;
+            _j["prices"][i]["numerator"] = to!int(split_array[split_index].split[2])-48;
+            split_index += 1;       
+          }
         }
       }
-
-      writeln(_j.toPrettyString);
 
       _miningDone = true;  
     }
