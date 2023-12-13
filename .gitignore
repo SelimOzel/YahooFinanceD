@@ -4,5 +4,8 @@ docs.json
 *.o
 *.obj
 *.lst
-*.json
+*.selections.json
 *.csv
+*.json
+example-*
+yahoofinanced-unittest-test-application

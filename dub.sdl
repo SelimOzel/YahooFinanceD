@@ -59,7 +59,7 @@ subPackage {
 	name "example-tip_std" 
 	sourcePaths "source/examples/tip_std" "lib"
 	importPaths "lib"
-	targetName "tip_std"
+	targetName "example-tip_std"
 	targetType "executable"
 }
 
