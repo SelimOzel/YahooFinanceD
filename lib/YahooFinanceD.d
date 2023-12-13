@@ -382,21 +382,7 @@ public:
     else return -1; 
   }
 
-  int EventsLength()
-  {
-    if(_miningDone) return to!int(_j["eventsData"].array.length);
-    else return -1; 
-  } 
-
 private:
-  // Returns everything from str between begin and end
-  string CutString(string str, string begin, string end)
-  {
-    auto result = str.findSplit(begin);
-    result = to!string(result[2]).findSplit(end);
-    return result[0];
-  }
-
   string _name; // name of the currently mined stock
   string _query; // url query for the stock
 
