@@ -81,8 +81,7 @@ public:
   {
     if(_miningDone) 
     {
-      if(option == "prices" || option == "") std.file.write(_name~"_"~_beginDate_s~"_"~_endDate_s~"_prices.json", _j["prices"].toPrettyString);
-      if(option == "eventsData" || option == "") std.file.write(_name~"_"~_beginDate_s~"_"~_endDate_s~"_events.json", _j["eventsData"].toPrettyString);
+      std.file.write(_name~"_"~_beginDate_s~"_"~_endDate_s~"_prices.json", _j.toPrettyString);
       return true;
     }
     else

@@ -31,6 +31,7 @@ double compute_variance(double[] array_IN) pure {
 // Correlation between two time series.
 double compute_correlation(double[] array_x_IN, double[] array_y_IN) pure {
   int n = to!int(array_x_IN.length);
+  if(to!int(array_y_IN.length) < n) n = to!int(array_y_IN.length);
   double x_mean = compute_mean(array_x_IN);
   double y_mean = compute_mean(array_y_IN);
   double numerator = 0.0;
