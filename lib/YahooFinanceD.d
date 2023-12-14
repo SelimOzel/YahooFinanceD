@@ -180,7 +180,6 @@ public:
   } 
 
   // Write implementation - csv
-  // Same as https://www.quandl.com/data/EOD-End-of-Day-US-Stock-Prices/
   // Name, Date, Unadjusted Open, Unadjusted High, Unadjusted Low, Unadjusted Close, Unadjusted Volume, Dividends, Splits, Adjusted Open, Adjusted High, Adjusted Low, Adjusted Close, Adjusted Volume  
   string WriteImpl(output val, T = string)(string option = "")
     if(val == output.csv)
