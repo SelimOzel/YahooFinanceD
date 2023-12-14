@@ -42,37 +42,3 @@ double compute_correlation(double[] array_x_IN, double[] array_y_IN) pure {
   }
   return numerator/denominator;
 }
-
-// Compute ordinary least squares estimators for two time series
-// y = b1 + b2*x
-double[2] compute_ordinary_least_squares(double[] array_x_IN, double[] array_y_IN) pure {
-  enforce(array_x_IN.length == array_y_IN.length, "compute_ordinary_least_squares: not same length"); 
-  int n = to!int(array_x_IN.length);
-  double x_mean = compute_mean(array_x_IN);
-  double y_mean = compute_mean(array_y_IN);
-  double numerator = 0.0;
-  double denominator = 0.0;
-  double b1, b2;
-  for(int i = 0; i<n; i++) {
-    numerator += (array_x_IN[i]-x_mean)*(array_y_IN[i]-y_mean);
-    denominator += pow(array_x_IN[i]-x_mean, 2);
-  }
-  b2 = numerator/denominator;
-  b1 = y_mean - b2*x_mean;
-  return [b1, b2];
-}
-
-/*
-  Generate points from an autoregressive process as a double vector
-  y_t = alpha + rho*y_t-1 + e_t
-*/
-double[] generate_autoregressive_process(double alpha, double rho, double e_t, int n) {
-    double y = 0;
-    double[] time_series;
-    for (int i = 0; i<n; i++) {
-        if (dice(0.5, 0.5) == 1) y = alpha + rho*y + e_t;
-        else y = alpha + rho*y - e_t;
-        time_series ~= y;     
-    }
-    return time_series;
-}
