@@ -63,6 +63,12 @@ struct Dividend_csvReader
   string amount;
 }
 
+Frame[][] NormalizeFrameDates(Frame[] benchmark, Frame[][] lists)
+{
+  Frame[][] result;
+  return result;
+}
+
 // Yahoo finance data scraper written in Dlang. Selim Ozel
 struct YahooFinanceD
 {
