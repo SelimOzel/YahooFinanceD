@@ -47,6 +47,14 @@ subPackage {
 }
 
 subPackage {
+	name "example-pairs"
+	sourcePaths "source/examples/pairs_normalization" "lib"
+	importPaths "lib"
+	targetName "example-pairs"
+	targetType "executable"
+}
+
+subPackage {
 	name "example-soxx_analysis" 
 	sourcePaths "source/examples/soxx_analysis" "lib"
 	importPaths "lib"
