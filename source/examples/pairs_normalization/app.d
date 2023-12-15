@@ -15,40 +15,48 @@ Dividend,
 Split;
 
 void main() {
-  // Example: Mining Apple between December 12, 1980 and Jun 6, 2020
-  string name = "MSFT";
-  Date begin = Date(1980, 12, 12);
-  Date end = Date(2020, 6, 10);
-
   YahooFinanceD simpleMiner;
-  simpleMiner.Mine(begin, end, name, intervals.monthly); // scrape monthly
-  Frame[] apple = simpleMiner.Write!(output.frame, logger.off, Frame[]); // write to data frame without logging
+  Date begin = Date(2021, 4, 1);
+  Date end = Date(2023, 6, 1);
+  string name = "";
 
-  for(int i = 0; i<apple.length; i++)
+  name = "BTC-USD";
+  simpleMiner.Mine(begin, end, name, intervals.daily);
+  Frame[] btc = simpleMiner.Write!(output.frame, logger.off, Frame[]);
+  double[] btc_time_series;
+  for(int i = 0; i<btc.length; i++)
   {
-    // Header
-    writeln();
-    writeln(apple[i].date);
+    writeln(btc[i].date.toString ~ " " ~ to!string(btc[i].price.close));
+    btc_time_series ~= to!double(btc[i].price.close);
+  }
 
-    // Price
-    writeln(
-      "adj: "~to!string(apple[i].price.adjclose)~
-      " close: "~to!string(apple[i].price.close)~
-      " high: "~to!string(apple[i].price.high)~
-      " low: "~to!string(apple[i].price.low)~
-      " open: "~to!string(apple[i].price.high)~
-      " volume: "~to!string(apple[i].price.volume));
+  name = "COIN";
+  simpleMiner.Mine(begin, end, name, intervals.daily);
+  Frame[] coin = simpleMiner.Write!(output.frame, logger.off, Frame[]);
+  double[] coin_time_series;
+  for(int i = 0; i<coin.length; i++)
+  {
+    writeln(coin[i].date.toString ~ " " ~ to!string(coin[i].price.close));
+    coin_time_series ~= to!double(coin[i].price.close);
+  }
 
-    // Corporate actions
-    if(apple[i].div.amount != 0)
-    {
-      writeln("div: "~to!string(apple[i].div.amount));
-    }
-    if(apple[i].split.denominator != 0 || apple[i].split.numerator!= 0)
-    {
-      writeln(
-      "split-denominator: "~to!string(apple[i].split.denominator)~
-      " split-numerator: "~to!string(apple[i].split.numerator));
-    }
+  name = "SLV";
+  simpleMiner.Mine(begin, end, name, intervals.daily);
+  Frame[] slv = simpleMiner.Write!(output.frame, logger.off, Frame[]);
+  double[] slv_time_series;
+  for(int i = 0; i<slv.length; i++)
+  {
+    writeln(slv[i].date.toString ~ " " ~ to!string(slv[i].price.close));
+    slv_time_series ~= to!double(slv[i].price.close);
+  }
+
+  name = "SLVM";
+  simpleMiner.Mine(begin, end, name, intervals.daily);
+  Frame[] slvm = simpleMiner.Write!(output.frame, logger.off, Frame[]);
+  double[] slvm_time_series;
+  for(int i = 0; i<slvm.length; i++)
+  {
+    writeln(slvm[i].date.toString ~ " " ~ to!string(slvm[i].price.close));
+    slvm_time_series ~= to!double(slvm[i].price.close);
   }
 }
