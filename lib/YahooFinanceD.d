@@ -65,7 +65,38 @@ struct Dividend_csvReader
 
 Frame[][] NormalizeFrameDates(Frame[] benchmark, Frame[][] lists)
 {
+  import std.stdio: writeln;
+
   Frame[][] result;
+  Frame[] element = lists[0];
+  bool[] doesDateExistsForAll;
+  bool addDate;
+
+  // Get all dates in benchmark
+  // Find all common dates in lists
+  for(int i = 0; i < benchmark.length; ++i)
+  {
+    addDate = true;
+    for(int n = 0; n < lists.length; ++n) doesDateExistsForAll ~= false;
+    for(int j = 0; j < lists.length; ++j)
+    {
+      for(int k = 0; k < lists[j].length; ++k)
+      {
+        if(benchmark[i].date == lists[j][k].date)
+          doesDateExistsForAll[j] = true;
+      }
+    }
+    for(int n = 0; n < lists.length; ++n)
+    {
+      if(doesDateExistsForAll[n] == false) addDate = false;
+    }
+    writeln(to!string(benchmark[i].date) ~ " -- Not Selected");
+    if(addDate)
+    {
+      writeln(to!string(benchmark[i].date) ~ " -- Selected");
+    }
+  }
+
   return result;
 }
 
