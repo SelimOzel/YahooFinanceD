@@ -65,12 +65,11 @@ struct Dividend_csvReader
 
 Frame[][] NormalizeFrameDates(Frame[] benchmark, Frame[][] lists)
 {
-  import std.stdio: writeln;
-
   Frame[][] result;
   Frame[] element = lists[0];
   bool[] doesDateExistsForAll;
   bool addDate;
+  Date[] normalized_dates;
 
   // Get all dates in benchmark
   // Find all common dates in lists
@@ -90,11 +89,44 @@ Frame[][] NormalizeFrameDates(Frame[] benchmark, Frame[][] lists)
     {
       if(doesDateExistsForAll[n] == false) addDate = false;
     }
-    writeln(to!string(benchmark[i].date) ~ " -- Not Selected");
     if(addDate)
     {
-      writeln(to!string(benchmark[i].date) ~ " -- Selected");
+      normalized_dates ~= benchmark[i].date;
     }
+  }
+
+  // Add benchmark's normalized frames to result
+  Frame[] normalized_benchmark;
+  int i_n = 0;
+  for(int i = 0; i < benchmark.length; ++i)
+  {
+    // NOT THE CORRECT LOOP STRUCTURE
+    if(normalized_dates[i_n] == benchmark[i].date)
+    {
+      normalized_benchmark ~= benchmark[i];
+      i_n += 1;
+    }
+  }
+  result ~= normalized_benchmark;
+
+  // Add normalized frames of lists to result
+  for(int k = 0; k < lists.length; ++k)
+  {
+    Frame[] normalized_list_item;
+    i_n = 0;
+
+    for(int i = 0; i < lists[k].length; ++i)
+    {
+      if(i_n < normalized_dates.length)
+      {
+        if(normalized_dates[i_n] == lists[k][i].date)
+        {
+          normalized_list_item ~= lists[k][i];
+          i_n += 1;
+        } 
+      }
+    }
+    result ~= normalized_list_item;
   }
 
   return result;

@@ -38,4 +38,9 @@ void main() {
   Frame[] slvm = simpleMiner.Write!(output.frame, logger.off, Frame[]);
 
   Frame[][] normalizedToCOIN = NormalizeFrameDates(coin, [btc, slv, slvm]);
+
+  for(int i = 0; i < normalizedToCOIN.length; ++i)
+  {
+    writeln("Length of " ~ to!string(i) ~ " " ~  to!string(normalizedToCOIN[i].length));
+  }
 }
