@@ -324,6 +324,15 @@ public:
     _splitsWritten = 0;
     _pricesWritten = 0; 
 
+    string cachePath = "cache/";
+    if (exists(cachePath~_name~"_"~_beginDate_s~"_"~_endDate_s~"_prices_cache.json"))
+    {
+      _miningDone = true;
+      string raw = to!string(read(cachePath~_name~"_"~_beginDate_s~"_"~_endDate_s~"_prices_cache.json"));
+      _j = parseJSON(raw);
+      return;
+    }
+
     // Curl it
     try
     {
@@ -416,7 +425,12 @@ public:
         }
       }
 
-      _miningDone = true;  
+      // Cache it!
+      if (!exists(cachePath))
+        mkdir(cachePath);
+      std.file.write(cachePath~_name~"_"~_beginDate_s~"_"~_endDate_s~"_prices_cache.json", _j.toPrettyString);
+
+      _miningDone = true;
     }
     catch (CurlException e)
     {
