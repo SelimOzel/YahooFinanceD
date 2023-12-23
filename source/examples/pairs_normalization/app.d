@@ -41,7 +41,7 @@ void main() {
   Frame[][] normalizedToCOIN = NormalizeFrameDates(coin, [btc, slv, svm]);
 
   for(int i = 0; i < normalizedToCOIN.length; ++i)
-  {
     PrintFrame(normalizedToCOIN[i]);
-  }
+
+  PrintFrame(svm);
 }
