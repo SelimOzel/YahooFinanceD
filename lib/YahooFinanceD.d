@@ -153,43 +153,11 @@ struct YahooFinanceD
 {
 public:
   // Write template
-  T Write(output val = output.json, logger log = logger.on, T = bool)(string option = "")
+  T Write(output val = output.frame, logger log = logger.on, T = bool)(string option = "")
   {
     T result = WriteImpl!val(option);
     if(log == logger.on) WriteLogger!val;
     return result;
-  }
-
-  // Write implementation - json
-  bool WriteImpl(output val, T = bool)(string option = "")
-    if(val == output.json)
-  {
-    if(_miningDone) 
-    {
-      std.file.write(_name~"_"~_beginDate_s~"_"~_endDate_s~"_prices.json", _j.toPrettyString);
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-  }
-
-  // Write logger - json
-  void WriteLogger(output val)()
-    if(val == output.json)
-  {
-    import std.stdio: writeln;
-
-    if(_miningDone) 
-    {
-      writeln("Price output written to " ~ _name~"_"~_beginDate_s~"_"~_endDate_s~"_prices.json. ");
-      writeln("Event output written to " ~ _name~"_"~_beginDate_s~"_"~_endDate_s~"_events.json. ");
-    }
-    else
-    {
-      writeln("Can't write to json. Mining not done.");
-    }
   }
 
   // Write implementation - frame
@@ -523,7 +491,6 @@ unittest
   foreach(string name; list)
   {
     simpleMiner.Mine!(logger.on)(begin, end, name);
-    simpleMiner.Write!(output.json, logger.on); 
     assert(simpleMiner.PriceLength() > 100);
     Frame[] frame = simpleMiner.Write!(output.frame, logger.on, Frame[]); 
     assert(frame.length > 100);

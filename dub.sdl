@@ -39,14 +39,6 @@ subPackage {
 }
 
 subPackage {
-	name "example-json" 
-	sourcePaths "source/examples/json" "lib"
-	importPaths "lib"
-	targetName "example-json"
-	targetType "executable"
-}
-
-subPackage {
 	name "example-pairs"
 	sourcePaths "source/examples/pairs_normalization" "lib"
 	importPaths "lib"
