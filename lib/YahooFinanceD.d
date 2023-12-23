@@ -6,12 +6,13 @@ import std.conv;
 import std.algorithm;
 import std.json;
 
-enum output {json, frame, csv} // Feel free to add your own templates here
+enum output {frame, csv} // Feel free to add your own templates here
 enum logger {on, off} // Enable/disable logging
 enum intervals {daily = "1d", weekly = "1wk", monthly = "1mo"}
 
 struct Frame
 {
+  string name;
   Price price;
   Dividend div;
   Split split;
@@ -63,48 +64,100 @@ struct Dividend_csvReader
   string amount;
 }
 
+Frame[][] NormalizeFrameDates(Frame[] benchmark, Frame[][] lists)
+{
+  Frame[][] result;
+  Frame[] element = lists[0];
+  bool[] doesDateExistsForAll;
+  bool addDate;
+  Date[] normalized_dates;
+
+  // Get all dates in benchmark
+  // Find all common dates in lists
+  for(int i = 0; i < benchmark.length; ++i)
+  {
+    addDate = true;
+    for(int n = 0; n < lists.length; ++n) doesDateExistsForAll ~= false;
+    for(int j = 0; j < lists.length; ++j)
+    {
+      for(int k = 0; k < lists[j].length; ++k)
+      {
+        if(benchmark[i].date == lists[j][k].date)
+          doesDateExistsForAll[j] = true;
+      }
+    }
+    for(int n = 0; n < lists.length; ++n)
+    {
+      if(doesDateExistsForAll[n] == false) addDate = false;
+    }
+    if(addDate)
+    {
+      normalized_dates ~= benchmark[i].date;
+    }
+  }
+
+  // Add benchmark's normalized frames to result
+  Frame[] normalized_benchmark;
+  int i_n = 0;
+  for(int i = 0; i < benchmark.length; ++i)
+  {
+    if(normalized_dates[i_n] == benchmark[i].date)
+    {
+      normalized_benchmark ~= benchmark[i];
+      i_n += 1;
+    }
+  }
+  result ~= normalized_benchmark;
+
+  // Add normalized frames of lists to result
+  for(int k = 0; k < lists.length; ++k)
+  {
+    Frame[] normalized_list_item;
+    i_n = 0;
+
+    for(int i = 0; i < lists[k].length; ++i)
+    {
+      if(i_n < normalized_dates.length)
+      {
+        if(normalized_dates[i_n] <= lists[k][i].date)
+        {
+          normalized_list_item ~= lists[k][i];
+          i_n += 1;
+        } 
+      }
+    }
+    result ~= normalized_list_item;
+  }
+
+  return result;
+}
+
+void PrintFrame(Frame[] frame_IN)
+{
+  import std.stdio: writeln;
+
+  // Weird break
+  writeln();
+  writeln("-----::-----::-----::-----::");
+  writeln("-----::-----::-----::-----::");
+  writeln("Length of " ~ frame_IN[0].name ~ " is " ~  to!string(frame_IN.length));
+  writeln("Open, high, low, close, volume");
+  for(int j = 0; j < frame_IN.length; ++j)
+  {
+    writeln(to!string(frame_IN[j].date) ~ ": "~ to!string(frame_IN[j].price.open) ~ ", ", to!string(frame_IN[j].price.high) ~ ", " ~to!string(frame_IN[j].price.low) ~ ", " ~ to!string(frame_IN[j].price.close) ~ ", " ~ to!string(frame_IN[j].price.volume));
+  }
+}
+
 // Yahoo finance data scraper written in Dlang. Selim Ozel
 struct YahooFinanceD
 {
 public:
   // Write template
-  T Write(output val = output.json, logger log = logger.on, T = bool)(string option = "")
+  T Write(output val = output.frame, logger log = logger.on, T = bool)(string option = "")
   {
     T result = WriteImpl!val(option);
     if(log == logger.on) WriteLogger!val;
     return result;
-  }
-
-  // Write implementation - json
-  bool WriteImpl(output val, T = bool)(string option = "")
-    if(val == output.json)
-  {
-    if(_miningDone) 
-    {
-      std.file.write(_name~"_"~_beginDate_s~"_"~_endDate_s~"_prices.json", _j.toPrettyString);
-      return true;
-    }
-    else
-    {
-      return false;
-    }
-  }
-
-  // Write logger - json
-  void WriteLogger(output val)()
-    if(val == output.json)
-  {
-    import std.stdio: writeln;
-
-    if(_miningDone) 
-    {
-      writeln("Price output written to " ~ _name~"_"~_beginDate_s~"_"~_endDate_s~"_prices.json. ");
-      writeln("Event output written to " ~ _name~"_"~_beginDate_s~"_"~_endDate_s~"_events.json. ");
-    }
-    else
-    {
-      writeln("Can't write to json. Mining not done.");
-    }
   }
 
   // Write implementation - frame
@@ -121,6 +174,7 @@ public:
       for (int i = 0; i<to!int(_j["prices"].array.length); ++i)
       {
         Frame frame;
+        frame.name = to!string(_j["name"]); 
         string date = to!string(_j["prices"][i]["date"]);
         int year = to!int(date[1 .. 5]);
         int month = to!int(date[6 .. 8]);
@@ -255,24 +309,34 @@ public:
     _splitsWritten = 0;
     _pricesWritten = 0; 
 
+    string cachePath = "cache/";
+    if (exists(cachePath~_name~"_"~_beginDate_s~"_"~_endDate_s~"_prices_cache.json"))
+    {
+      _miningDone = true;
+      string raw = to!string(read(cachePath~_name~"_"~_beginDate_s~"_"~_endDate_s~"_prices_cache.json"));
+      _j = parseJSON(raw);
+      return;
+    }
+
     // Curl it
     try
     {
       // Assemble query. Use unix time.
-      _query = "https://query1.finance.yahoo.com/v7/finance/download/"~name~"?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&events=history&includeAdjustedClose=true";
+      _query = "https://query1.finance.yahoo.com/v7/finance/download/"~_name~"?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&events=history&includeAdjustedClose=true";
       string shadow_content = to!string( get(_query));
       auto prices = shadow_content.csvReader!Price_csvReader(',');
 
-      _query = "https://query1.finance.yahoo.com/v7/finance/download/"~name~"?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&events=splits&includeAdjustedClose=true";
+      _query = "https://query1.finance.yahoo.com/v7/finance/download/"~_name~"?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&events=splits&includeAdjustedClose=true";
       shadow_content = to!string( get(_query));
       auto splits = shadow_content.csvReader!Split_csvReader(',');
 
-      _query = "https://query1.finance.yahoo.com/v7/finance/download/"~name~"?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&events=divs&includeAdjustedClose=true";
+      _query = "https://query1.finance.yahoo.com/v7/finance/download/"~_name~"?period1="~_beginUnix_s~"&period2="~_endUnix_s~"&interval="~interval~"&events=divs&includeAdjustedClose=true";
       shadow_content = to!string( get(_query));
       auto dividends = shadow_content.csvReader!Dividend_csvReader(',');
 
       _j = [ "prices": "" ];
-      
+      _j["name"] = _name;
+
       int price_index = 0;
       foreach (price; prices) 
       {
@@ -347,7 +411,12 @@ public:
         }
       }
 
-      _miningDone = true;  
+      // Cache it!
+      if (!exists(cachePath))
+        mkdir(cachePath);
+      std.file.write(cachePath~_name~"_"~_beginDate_s~"_"~_endDate_s~"_prices_cache.json", _j.toPrettyString);
+
+      _miningDone = true;
     }
     catch (CurlException e)
     {
@@ -422,7 +491,6 @@ unittest
   foreach(string name; list)
   {
     simpleMiner.Mine!(logger.on)(begin, end, name);
-    simpleMiner.Write!(output.json, logger.on); 
     assert(simpleMiner.PriceLength() > 100);
     Frame[] frame = simpleMiner.Write!(output.frame, logger.on, Frame[]); 
     assert(frame.length > 100);

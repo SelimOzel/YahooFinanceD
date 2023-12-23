@@ -9,3 +9,4 @@ docs.json
 *.json
 example-*
 yahoofinanced-unittest-test-application
+cache

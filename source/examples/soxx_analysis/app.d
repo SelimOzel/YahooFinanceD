@@ -3,7 +3,7 @@ import std.datetime;
 import std.string;
 import std.conv;
 import std.math: sqrt, pow;
-import std.file: write;
+import std.file: write, exists, mkdir;
 
 import YahooFinanceD: 
 YahooFinanceD,
@@ -62,5 +62,7 @@ void main() {
   }
 
   // Write outputs to csv files.
-  write("soxx_analysis_"~end.toISOString()~".csv", FRAMES_str);
+  if (!exists("./cache/csv/"))
+    mkdir("./cache/csv/");  
+  write("./cache/csv/soxx_analysis_"~end.toISOString()~".csv", FRAMES_str);
 }

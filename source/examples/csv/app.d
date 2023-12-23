@@ -1,4 +1,4 @@
-import std.file: write;
+import std.file: write, exists, mkdir;
 import std.datetime;
 import std.string;
 import std.conv;
@@ -53,6 +53,8 @@ void main() {
   string automobile_data = gm_str ~ f_str ~ fcau_str;
 
   // Write outputs to csv files.
-  write("tech_"~end.toISOString()~".csv", tech_data);
-  write("automobile_"~end.toISOString()~".csv", automobile_data);
+  if (!exists("./cache/csv/"))
+    mkdir("./cache/csv/"); 
+  write("./cache/csv/tech_"~end.toISOString()~".csv", tech_data);
+  write("./cache/csv/automobile_"~end.toISOString()~".csv", automobile_data);
 }
