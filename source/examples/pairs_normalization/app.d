@@ -43,5 +43,6 @@ void main() {
   for(int i = 0; i < normalizedToCOIN.length; ++i)
     PrintFrame(normalizedToCOIN[i]);
 
+  writeln("Print raw for diagnostics.");
   PrintFrame(svm);
 }

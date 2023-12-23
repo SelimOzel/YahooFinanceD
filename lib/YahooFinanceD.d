@@ -120,7 +120,7 @@ Frame[][] NormalizeFrameDates(Frame[] benchmark, Frame[][] lists)
     {
       if(i_n < normalized_dates.length)
       {
-        if(normalized_dates[i_n] == lists[k][i].date)
+        if(normalized_dates[i_n] <= lists[k][i].date)
         {
           normalized_list_item ~= lists[k][i];
           i_n += 1;
