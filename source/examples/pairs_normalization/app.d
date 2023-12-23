@@ -13,7 +13,8 @@ Frame,
 Price,
 Dividend,
 Split,
-NormalizeFrameDates;
+NormalizeFrameDates,
+PrintFrame;
 
 void main() {
   YahooFinanceD simpleMiner;
@@ -41,15 +42,6 @@ void main() {
 
   for(int i = 0; i < normalizedToCOIN.length; ++i)
   {
-    // Weird break
-    writeln();
-    writeln("-----::-----::-----::-----::");
-    writeln("-----::-----::-----::-----::");
-    writeln("Length of " ~ normalizedToCOIN[i][0].name ~ " is " ~  to!string(normalizedToCOIN[i].length));
-    writeln("Open, high, low, close, volume");
-    for(int j = 0; j < normalizedToCOIN[i].length; ++j)
-    {
-      writeln(to!string(normalizedToCOIN[i][j].date) ~ ": "~ to!string(normalizedToCOIN[i][j].price.open) ~ ", ", to!string(normalizedToCOIN[i][j].price.high) ~ ", " ~to!string(normalizedToCOIN[i][j].price.low) ~ ", " ~ to!string(normalizedToCOIN[i][j].price.close) ~ ", " ~ to!string(normalizedToCOIN[i][j].price.volume));
-    }
+    PrintFrame(normalizedToCOIN[i]);
   }
 }

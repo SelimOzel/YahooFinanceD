@@ -133,6 +133,22 @@ Frame[][] NormalizeFrameDates(Frame[] benchmark, Frame[][] lists)
   return result;
 }
 
+void PrintFrame(Frame[] frame_IN)
+{
+  import std.stdio: writeln;
+
+  // Weird break
+  writeln();
+  writeln("-----::-----::-----::-----::");
+  writeln("-----::-----::-----::-----::");
+  writeln("Length of " ~ frame_IN[0].name ~ " is " ~  to!string(frame_IN.length));
+  writeln("Open, high, low, close, volume");
+  for(int j = 0; j < frame_IN.length; ++j)
+  {
+    writeln(to!string(frame_IN[j].date) ~ ": "~ to!string(frame_IN[j].price.open) ~ ", ", to!string(frame_IN[j].price.high) ~ ", " ~to!string(frame_IN[j].price.low) ~ ", " ~ to!string(frame_IN[j].price.close) ~ ", " ~ to!string(frame_IN[j].price.volume));
+  }
+}
+
 // Yahoo finance data scraper written in Dlang. Selim Ozel
 struct YahooFinanceD
 {
