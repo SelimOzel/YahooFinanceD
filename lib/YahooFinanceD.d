@@ -101,7 +101,6 @@ Frame[][] NormalizeFrameDates(Frame[] benchmark, Frame[][] lists)
   int i_n = 0;
   for(int i = 0; i < benchmark.length; ++i)
   {
-    // NOT THE CORRECT LOOP STRUCTURE
     if(normalized_dates[i_n] == benchmark[i].date)
     {
       normalized_benchmark ~= benchmark[i];
