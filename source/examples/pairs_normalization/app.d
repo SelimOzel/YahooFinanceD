@@ -35,9 +35,9 @@ void main() {
 
   name = "SVM";
   simpleMiner.Mine(begin, end, name, intervals.daily);
-  Frame[] slvm = simpleMiner.Write!(output.frame, logger.off, Frame[]);
+  Frame[] svm = simpleMiner.Write!(output.frame, logger.off, Frame[]);
 
-  Frame[][] normalizedToCOIN = NormalizeFrameDates(coin, [btc, slv, slvm]);
+  Frame[][] normalizedToCOIN = NormalizeFrameDates(coin, [btc, slv, svm]);
 
   for(int i = 0; i < normalizedToCOIN.length; ++i)
   {
