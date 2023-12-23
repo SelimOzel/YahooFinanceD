@@ -33,7 +33,7 @@ void main() {
   simpleMiner.Mine(begin, end, name, intervals.daily);
   Frame[] slv = simpleMiner.Write!(output.frame, logger.off, Frame[]);
 
-  name = "SLVM";
+  name = "SVM";
   simpleMiner.Mine(begin, end, name, intervals.daily);
   Frame[] slvm = simpleMiner.Write!(output.frame, logger.off, Frame[]);
 
@@ -41,6 +41,15 @@ void main() {
 
   for(int i = 0; i < normalizedToCOIN.length; ++i)
   {
-    writeln("Length of " ~ to!string(i) ~ " " ~  to!string(normalizedToCOIN[i].length));
+    // Weird break
+    writeln();
+    writeln("-----::-----::-----::-----::");
+    writeln("-----::-----::-----::-----::");
+    writeln("Length of " ~ normalizedToCOIN[i][0].name ~ " is " ~  to!string(normalizedToCOIN[i].length));
+    writeln("Open, high, low, close, volume");
+    for(int j = 0; j < normalizedToCOIN[i].length; ++j)
+    {
+      writeln(to!string(normalizedToCOIN[i][j].date) ~ ": "~ to!string(normalizedToCOIN[i][j].price.open) ~ ", ", to!string(normalizedToCOIN[i][j].price.high) ~ ", " ~to!string(normalizedToCOIN[i][j].price.low) ~ ", " ~ to!string(normalizedToCOIN[i][j].price.close) ~ ", " ~ to!string(normalizedToCOIN[i][j].price.volume));
+    }
   }
 }

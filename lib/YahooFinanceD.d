@@ -12,6 +12,7 @@ enum intervals {daily = "1d", weekly = "1wk", monthly = "1mo"}
 
 struct Frame
 {
+  string name;
   Price price;
   Dividend div;
   Split split;
@@ -190,6 +191,7 @@ public:
       for (int i = 0; i<to!int(_j["prices"].array.length); ++i)
       {
         Frame frame;
+        frame.name = to!string(_j["name"]); 
         string date = to!string(_j["prices"][i]["date"]);
         int year = to!int(date[1 .. 5]);
         int month = to!int(date[6 .. 8]);
@@ -350,7 +352,8 @@ public:
       auto dividends = shadow_content.csvReader!Dividend_csvReader(',');
 
       _j = [ "prices": "" ];
-      
+      _j["name"] = name;
+
       int price_index = 0;
       foreach (price; prices) 
       {
